@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="activation-container">
+    <h1 class="text-center">Account Activation</h1>
+    <p class="text-center">Thank you for registering! Please check your email for the activation link.</p>
+    <div class="activation-gif text-center">
+        <img src="{% static 'activation.gif' %}" alt="Email Activation GIF" class="activation-image">
+    </div>
+    <p class="text-center">
+        If you didn't receive an email, please check your spam folder or 
+        <a href="{% url 'users:register' %}" class="text-decoration-none">register again</a>.
+    </p>
+
+    <div class="text-center">
+        {% if user and user.id %}
+            {% if user.resend_attempts < 3 %}
+                <button id="resend-button" class="btn btn-primary">Resend Activation Link</button>
+                <p id="resend-message" class="mt-2"></p>
+            {% else %}
+                <p class="text-danger">You have reached the limit of resending the activation link. Please try again in an hour.</p>
+            {% endif %}
+        {% else %}
+            <p class="text-danger">User information is not available. Cannot resend activation link.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.getElementById('resend-button')?.onclick = function() {
+        fetch('{% url "users:resend_activation_link" user.id %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('resend-message').innerText = data.message || data.error;
+        });
+    };
+</script>
+
+<style>
+    .activation-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px;
+    }
+
+    .activation-container h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .activation-container p {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .activation-gif {
+        margin: 15px 0;
+    }
+
+    .activation-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    #resend-button {
+        margin-top: 10px;
+        font-size: 1rem;
+    }
+
+    #resend-message {
+        font-size: 0.9rem;
+        color: #333;
+    }
+</style>
+{% endblock %}

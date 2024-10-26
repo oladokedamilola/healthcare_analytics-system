@@ -31,19 +31,32 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto"> <!-- Aligns the nav items to the right -->
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'patient_list' %}">Patients</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'provider_list' %}">Healthcare Providers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'analytics_results' %}">Analytics Results</a>
-                        </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Patients</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Healthcare Providers</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Analytics Results</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:logout' %}">Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:login' %}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
-        </nav>        
+        </nav>
+        
     </header>
 
     {% if messages %}

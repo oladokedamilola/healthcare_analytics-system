@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<form method="post" action="{% url 'update_dashboard_settings' %}">
+    {% csrf_token %}
+    <h2>Select Widgets</h2>
+    {% for widget in available_widgets %}
+        <label>
+            <input type="checkbox" name="widgets" value="{{ widget.id }}"
+                {% if widget in selected_widgets %} checked {% endif %}>
+            {{ widget.title }} - {{ widget.description }}
+        </label><br>
+    {% endfor %}
+    <button type="submit">Update Dashboard</button>
+</form>
+
+<div class="dashboard-widgets">
+    {% for widget in selected_widgets %}
+        <div class="widget">
+            <h3>{{ widget.title }}</h3>
+            <p>{{ widget.description }}</p>
+            <!-- Here, you can add logic to display actual metrics for each widget -->
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

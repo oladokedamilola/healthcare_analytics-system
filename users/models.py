@@ -4,9 +4,26 @@ from django.core.files.base import ContentFile
 import base64
 from PIL import Image
 from io import BytesIO
+from django.utils import timezone
+from datetime import timedelta
 
 class CustomUser(AbstractUser):
-    # No need for phone_number and profile_image here
+    # New fields for tracking resend attempts
+    resend_attempts = models.PositiveIntegerField(default=0)
+    last_resend_attempt = models.DateTimeField(null=True, blank=True)
+    reset_token = models.CharField(max_length=255, null=True, blank=True)
+
+    def can_resend_activation_link(self):
+        if self.resend_attempts >= 3:
+            if self.last_resend_attempt and timezone.now() < self.last_resend_attempt + timedelta(hours=1):
+                return False
+        return True
+
+    def reset_resend_attempts(self):
+        self.resend_attempts = 0
+        self.last_resend_attempt = None
+        self.save()    
+        
     def __str__(self):
         return self.username
 
@@ -34,3 +51,17 @@ class Doctor(models.Model):
         image_data = ContentFile(base64.b64decode(image_str), name=f"{initials}_default.png")
         self.profile_image.save(f"{initials}_default.png", image_data, save=False)
 
+class Widget(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    # Add any other fields relevant to the widget (e.g., type of metric)
+
+    def __str__(self):
+        return self.title
+
+class UserDashboardSettings(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    selected_widgets = models.ManyToManyField(Widget)
+
+    def __str__(self):
+        return f"{self.user.username}'s Dashboard Settings"

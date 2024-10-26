@@ -3,6 +3,24 @@
 {% block title %}Home - Healthcare Data Analytics{% endblock %}
 
 {% block content %}
+<style>
+    .user-section {
+        background-color: #f0f8ff; /* Light blue background */
+        border: 1px solid #d1ecf1; /* Light border for definition */
+        border-radius: 8px; /* Rounded corners */
+        padding: 30px 0; /* Padding for vertical spacing */
+    }
+    
+    .user-section .btn-primary {
+        background-color: var(--primary-color); /* Match theme */
+        color: white; /* Text color for the button */
+    }
+    
+    .user-section h2 {
+        color: var(--accent-color); /* Accent color for the heading */
+    }
+    
+</style>
 <!-- Hero Section -->
 <section class="hero-section" style="background: url('{% static 'images/hero.jpg' %}') no-repeat center center; background-size: cover; height: 500px; position: relative;">
     <div class="hero-overlay">
@@ -51,6 +69,16 @@
 </section>
 
 <!-- Call to Action Section -->
+{% if user.is_authenticated %}
+<!-- User-Specific Section -->
+<section class="user-section text-center py-5 bg-light">
+    <div class="container">
+        <h2>Your Health Journey</h2>
+        <p>As a valued member, explore insights and analytics tailored just for you.</p>
+        <a href="#" class="btn btn-primary">Go to Dashboard</a>    </div>
+</section>
+{% else %}
+<!-- Call to Action Section -->
 <section class="cta-section text-center py-5">
     <div class="container">
         <h2>Join Us Today!</h2>
@@ -58,4 +86,6 @@
         <a href="{% url 'users:register' %}" class="btn btn-secondary">Sign Up</a>
     </div>
 </section>
+{% endif %}
+
 {% endblock %}

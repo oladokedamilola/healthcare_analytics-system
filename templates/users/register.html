@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 form-container">
             <h2 class="text-center">Register as a Doctor</h2>
-            <form method="post" novalidate>
+            <form method="post" novalidate onsubmit="return validateForm()">
                 {% csrf_token %}
                 
                 <!-- First Name Field -->
@@ -86,24 +86,42 @@
                             <i class="bi bi-eye-slash" id="confirmEyeIcon"></i>
                         </button>
                     </div>
-                    <div id="confirmPasswordFeedback" class="mt-2"></div>
+                    <div id="confirmPasswordFeedback" class="text-danger mt-2"></div>
+                    {% if form.confirm_password.errors %}
+                        <div class="text-danger">
+                            {% for error in form.confirm_password.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary w-100" id="registerButton" disabled>Register</button>
-                
-            </form>
 
-            <!-- Login Link -->
-            <p class="text-center mt-3">Already have an account? 
-                <a href="{% url 'users:login' %}" style="text-decoration: none;">Login here</a>.
-            </p>
+                <!-- Login Link -->
+                <p class="text-center mt-3">Already have an account? 
+                    <a href="{% url 'users:login' %}" style="text-decoration: none;">Login here</a>.
+                </p>
+            </form>
         </div>
     </div>
 </div>
 
 <!-- JavaScript for Password Toggle and Validation -->
 <script>
+    // Disable form submission if validation fails
+    function validateForm() {
+        const isPasswordValid = checkPasswordRequirements();
+        const doPasswordsMatch = confirmPasswordInput.value === registerPasswordInput.value;
+
+        if (!isPasswordValid || !doPasswordsMatch) {
+            alert('Please ensure all fields are valid.');
+            return false;
+        }
+        return true;
+    }
+
     // Toggle Password Visibility for Password Field
     const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
     const registerPasswordInput = document.getElementById('registerPassword');
@@ -125,7 +143,7 @@
     const specialCharRequirement = document.getElementById('specialCharRequirement');
     const registerButton = document.getElementById('registerButton');
 
-    passwordInput.addEventListener('input', function() {
+    function checkPasswordRequirements() {
         const password = passwordInput.value;
 
         // Check password requirements
@@ -147,15 +165,13 @@
         specialCharRequirement.classList.toggle('invalid', !hasSpecialChar);
         specialCharRequirement.classList.toggle('valid', hasSpecialChar);
 
-        // Set input border color based on validity
-        if (hasLength && hasNumber && hasUppercase && hasLowercase && hasSpecialChar) {
-            passwordInput.style.borderColor = 'green';
-            registerButton.disabled = false; // Enable the register button
-        } else {
-            passwordInput.style.borderColor = 'red';
-            registerButton.disabled = true; // Disable the register button
-        }
-    });
+        // Enable or disable register button
+        const isValid = hasLength && hasNumber && hasUppercase && hasLowercase && hasSpecialChar;
+        registerButton.disabled = !isValid;
+        return isValid;
+    }
+
+    passwordInput.addEventListener('input', checkPasswordRequirements);
 
     // Toggle Password Visibility for Confirm Password Field
     const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
@@ -171,13 +187,10 @@
 
     // Validate Confirm Password Field
     confirmPasswordInput.addEventListener('input', function() {
-        const confirmPassword = confirmPasswordInput.value;
         const feedback = document.getElementById('confirmPasswordFeedback');
-
-        if (confirmPassword !== passwordInput.value) {
+        if (confirmPasswordInput.value !== passwordInput.value) {
             confirmPasswordInput.style.borderColor = 'red';
             feedback.textContent = 'Passwords do not match.';
-            feedback.style.color = 'red';
         } else {
             confirmPasswordInput.style.borderColor = 'green';
             feedback.textContent = '';
