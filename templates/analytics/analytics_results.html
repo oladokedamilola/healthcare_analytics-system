@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics Results - Healthcare Data Analytics{% endblock %}
+
+{% block content %}
+    <h1>Analytics Results</h1>
+    <ul class="list-group">
+        {% for result in results %}
+            <li class="list-group-item">Analysis for {{ result.patient }} on {{ result.analysis_date }}</li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn-primary mt-3" href="{% url 'index' %}">Back to Home</a>
+{% endblock %}

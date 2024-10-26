@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Healthcare Provider List - Healthcare Data Analytics{% endblock %}
+
+{% block content %}
+    <h1>Healthcare Provider List</h1>
+    <ul class="list-group">
+        {% for provider in providers %}
+            <li class="list-group-item">{{ provider.name }} - {{ provider.specialization }}</li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn-primary mt-3" href="{% url 'index' %}">Back to Home</a>
+{% endblock %}

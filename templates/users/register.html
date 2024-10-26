@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 form-container">
+            <h2 class="text-center">Register as a Doctor</h2>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <!-- First Name Field -->
+                <div class="mb-3">
+                    <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                    <input type="text" name="first_name" class="form-control" id="{{ form.first_name.id_for_label }}" 
+                           value="{{ form.first_name.value|default:'' }}" required>
+                    {% if form.first_name.errors %}
+                        <div class="text-danger">
+                            {% for error in form.first_name.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Last Name Field -->
+                <div class="mb-3">
+                    <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                    <input type="text" name="last_name" class="form-control" id="{{ form.last_name.id_for_label }}" 
+                           value="{{ form.last_name.value|default:'' }}" required>
+                    {% if form.last_name.errors %}
+                        <div class="text-danger">
+                            {% for error in form.last_name.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Email Field -->
+                <div class="mb-3">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" id="{{ form.email.id_for_label }}" 
+                           value="{{ form.email.value|default:'' }}" required>
+                    {% if form.email.errors %}
+                        <div class="text-danger">
+                            {% for error in form.email.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Password Field -->
+                <div class="mb-3 position-relative">
+                    <label for="registerPassword" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password" name="password" class="form-control" id="registerPassword" required>
+                        <button type="button" class="btn btn-outline-secondary" id="toggleRegisterPassword" tabindex="-1" style="border-left: none;">
+                            <i class="bi bi-eye-slash" id="registerEyeIcon"></i>
+                        </button>
+                    </div>
+                    <div id="passwordRequirements" class="mt-2">
+                        <ul>
+                            <li id="lengthRequirement" class="invalid">At least 8 characters</li>
+                            <li id="numberRequirement" class="invalid">At least one number</li>
+                            <li id="uppercaseRequirement" class="invalid">At least one uppercase letter</li>
+                            <li id="lowercaseRequirement" class="invalid">At least one lowercase letter</li>
+                            <li id="specialCharRequirement" class="invalid">At least one special character</li>
+                        </ul>
+                    </div>
+                    {% if form.password.errors %}
+                        <div class="text-danger">
+                            {% for error in form.password.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="mb-3 position-relative">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <div class="input-group">
+                        <input type="password" name="confirm_password" class="form-control" id="confirmPassword" required>
+                        <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword" tabindex="-1" style="border-left: none;">
+                            <i class="bi bi-eye-slash" id="confirmEyeIcon"></i>
+                        </button>
+                    </div>
+                    <div id="confirmPasswordFeedback" class="mt-2"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-100" id="registerButton" disabled>Register</button>
+                
+            </form>
+
+            <!-- Login Link -->
+            <p class="text-center mt-3">Already have an account? 
+                <a href="{% url 'users:login' %}" style="text-decoration: none;">Login here</a>.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Password Toggle and Validation -->
+<script>
+    // Toggle Password Visibility for Password Field
+    const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
+    const registerPasswordInput = document.getElementById('registerPassword');
+    const registerEyeIcon = document.getElementById('registerEyeIcon');
+
+    toggleRegisterPassword.addEventListener('click', function() {
+        const type = registerPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        registerPasswordInput.setAttribute('type', type);
+        registerEyeIcon.classList.toggle('bi-eye');
+        registerEyeIcon.classList.toggle('bi-eye-slash');
+    });
+
+    // Validate Password Requirements
+    const passwordInput = document.getElementById('registerPassword');
+    const lengthRequirement = document.getElementById('lengthRequirement');
+    const numberRequirement = document.getElementById('numberRequirement');
+    const uppercaseRequirement = document.getElementById('uppercaseRequirement');
+    const lowercaseRequirement = document.getElementById('lowercaseRequirement');
+    const specialCharRequirement = document.getElementById('specialCharRequirement');
+    const registerButton = document.getElementById('registerButton');
+
+    passwordInput.addEventListener('input', function() {
+        const password = passwordInput.value;
+
+        // Check password requirements
+        const hasLength = password.length >= 8;
+        const hasNumber = /[0-9]/.test(password);
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        // Update requirement indicators
+        lengthRequirement.classList.toggle('invalid', !hasLength);
+        lengthRequirement.classList.toggle('valid', hasLength);
+        numberRequirement.classList.toggle('invalid', !hasNumber);
+        numberRequirement.classList.toggle('valid', hasNumber);
+        uppercaseRequirement.classList.toggle('invalid', !hasUppercase);
+        uppercaseRequirement.classList.toggle('valid', hasUppercase);
+        lowercaseRequirement.classList.toggle('invalid', !hasLowercase);
+        lowercaseRequirement.classList.toggle('valid', hasLowercase);
+        specialCharRequirement.classList.toggle('invalid', !hasSpecialChar);
+        specialCharRequirement.classList.toggle('valid', hasSpecialChar);
+
+        // Set input border color based on validity
+        if (hasLength && hasNumber && hasUppercase && hasLowercase && hasSpecialChar) {
+            passwordInput.style.borderColor = 'green';
+            registerButton.disabled = false; // Enable the register button
+        } else {
+            passwordInput.style.borderColor = 'red';
+            registerButton.disabled = true; // Disable the register button
+        }
+    });
+
+    // Toggle Password Visibility for Confirm Password Field
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const confirmEyeIcon = document.getElementById('confirmEyeIcon');
+
+    toggleConfirmPassword.addEventListener('click', function() {
+        const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        confirmPasswordInput.setAttribute('type', type);
+        confirmEyeIcon.classList.toggle('bi-eye');
+        confirmEyeIcon.classList.toggle('bi-eye-slash');
+    });
+
+    // Validate Confirm Password Field
+    confirmPasswordInput.addEventListener('input', function() {
+        const confirmPassword = confirmPasswordInput.value;
+        const feedback = document.getElementById('confirmPasswordFeedback');
+
+        if (confirmPassword !== passwordInput.value) {
+            confirmPasswordInput.style.borderColor = 'red';
+            feedback.textContent = 'Passwords do not match.';
+            feedback.style.color = 'red';
+        } else {
+            confirmPasswordInput.style.borderColor = 'green';
+            feedback.textContent = '';
+        }
+    });
+</script>
+
+<style>
+    .valid {
+        color: green;
+    }
+    .invalid {
+        color: red;
+    }
+</style>
+{% endblock %}

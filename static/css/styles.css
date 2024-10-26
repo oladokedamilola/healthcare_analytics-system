@@ -1,0 +1,141 @@
+:root {
+    --primary-color: #FF7F50;  /* Coral */
+    --secondary-color: #4682B4; /* Steel Blue */
+    --accent-color: #FFD700;    /* Gold */
+    --background-color: #FFF8DC; /* Cornsilk */
+    --text-color: #2F4F4F;      /* Dark Slate Gray */
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Noto Sans', Arial, sans-serif; /* Use Noto Sans for body */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: var(--primary-color);
+}
+
+.navbar-brand {
+    color: var(--text-color);
+}
+
+.navbar-nav .nav-link {
+    color: var(--text-color);
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--accent-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif; /* Use Roboto for headings */
+    color: var(--secondary-color);
+}
+
+.button {
+    background-color: var(--secondary-color);
+    color: #fff; /* White text on button */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: var(--accent-color);
+}
+
+
+/* Hero Section Styles */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero-overlay h1 {
+    color: #FFD700; /* Gold color */
+    font-size: 3rem;
+    font-family: 'Noto Sans', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Shadow for better visibility */
+}
+
+.hero-overlay p {
+    color: #FFF; /* White text color */
+    font-size: 1.25rem;
+    font-family: 'Noto Sans', sans-serif;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Shadow for better visibility */
+}
+
+.hero-overlay a {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* Features Section Styles */
+.features-section {
+    padding: 50px 0;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 0; /* Remove padding from card to ensure full image display */
+    margin-bottom: 20px; /* Space between cards */
+    transition: transform 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+}
+
+
+.feature-icon {
+    width: 100%; /* Set to full width of the card */
+    height: auto; /* Maintain aspect ratio by setting height to auto */
+    max-height: 200px; /* Optional: Set a max height for better layout control */
+    object-fit: contain; /* Ensure the entire image is displayed without cropping */
+    margin-bottom: 15px; /* Space between image and text */
+}
+
+
+.cta-section {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+
+/* In your CSS file */
+.form-container {
+    max-width: 500px; /* Adjust the maximum width as needed */
+    margin: auto; /* Center the container */
+}
+
+#flash-messages .alert {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+#flash-messages .btn-close {
+    color: #fff;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+.alert-error, .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}

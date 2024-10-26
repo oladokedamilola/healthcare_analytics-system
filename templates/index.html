@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Healthcare Data Analytics{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="background: url('{% static 'images/hero.jpg' %}') no-repeat center center; background-size: cover; height: 500px; position: relative;">
+    <div class="hero-overlay">
+        <h1>Welcome to the Healthcare Data Analytics Platform</h1>
+        <p>Your go-to platform for analyzing patient data and improving outcomes.</p>
+        <a href="{% url 'users:register' %}" class="btn btn-primary">Get Started</a>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section py-5">
+    <div class="container">
+        <h2>About Us</h2>
+        <p>Our platform leverages advanced analytics to help healthcare providers enhance patient care and operational efficiency. With user-friendly tools and real-time insights, we empower you to make data-driven decisions.</p>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section bg-light py-5">
+    <div class="container">
+        <h2>Features</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <img src="{% static 'images/data.jpg' %}" alt="Data Visualization" class="feature-icon">
+                    <h3>Data Visualization</h3>
+                    <p>Visualize complex healthcare data through intuitive dashboards and charts.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <img src="{% static 'images/pred.jpg' %}" alt="Predictive Analytics" class="feature-icon">
+                    <h3>Predictive Analytics</h3>
+                    <p>Utilize predictive models to anticipate patient needs and optimize resources.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <img src="{% static 'images/time.jpg' %}" alt="Real-time Reporting" class="feature-icon">
+                    <h3>Real-time Reporting</h3>
+                    <p>Generate real-time reports for informed decision-making and performance tracking.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="cta-section text-center py-5">
+    <div class="container">
+        <h2>Join Us Today!</h2>
+        <p>Sign up to start leveraging healthcare data analytics for better patient outcomes.</p>
+        <a href="{% url 'users:register' %}" class="btn btn-secondary">Sign Up</a>
+    </div>
+</section>
+{% endblock %}
