@@ -144,6 +144,7 @@ def complete_doctor_registration(request, user_id):
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def user_login(request):
     print("Debug: user_login called.")
+    form = AuthenticationForm()
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -180,7 +181,6 @@ def user_login(request):
             print("Debug: Authentication failed. Invalid credentials.")
     else:
         print("Debug: GET request to user_login.")
-        form = AuthenticationForm()
     
     return render(request, 'users/login.html', {'form': form})
 
@@ -278,17 +278,9 @@ def user_logout(request):
     return redirect('users:login')
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-
 @login_required
 def dashboard(request):
-    settings, _ = UserDashboardSettings.objects.get_or_create(user=request.user)
-    available_widgets = Widget.objects.all()
-    return render(request, 'dashboard.html', {
-        'selected_widgets': settings.selected_widgets.all(),
-        'available_widgets': available_widgets,
-    })
+    return render(request, 'users/dashboard.html')
 
 @login_required
 def update_dashboard_settings(request):

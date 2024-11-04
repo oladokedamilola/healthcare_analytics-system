@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.table {
+    margin-top: 20px;
+}
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+</style>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Registered Patients</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+                <tr>
+                    <td>{{ patient.name }}</td>
+                    <td>{{ patient.age }}</td>
+                    <td>{{ patient.get_gender_display }}</td>
+                    <td>{{ patient.phone_number }}</td>
+                    <td>{{ patient.email }}</td>
+                    <td>
+                        <a href="{% url 'patients:patient_detail' patient.id %}" class="btn btn-primary btn-sm">View Details</a>
+                        <a href="{% url 'patients:add_bp_measurement' patient.id %}" class="btn btn-secondary btn-sm">Add Measurement</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No patients registered yet.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

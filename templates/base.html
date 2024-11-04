@@ -18,6 +18,7 @@
 
     <!-- Custom CSS (optional) -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
 
     <link rel="shortcut icon" href="{% static 'images/Hicon.png' %}" type="image/x-icon">
 </head>
@@ -34,6 +35,9 @@
                         {% if user.is_authenticated %}
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Patients</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:dashboard' %}">Dashboard</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Healthcare Providers</a>

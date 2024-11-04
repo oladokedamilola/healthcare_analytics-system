@@ -1,28 +1,171 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Data Analytics Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
 
-{% block content %}
-<h1>Dashboard</h1>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
-<form method="post" action="{% url 'update_dashboard_settings' %}">
-    {% csrf_token %}
-    <h2>Select Widgets</h2>
-    {% for widget in available_widgets %}
-        <label>
-            <input type="checkbox" name="widgets" value="{{ widget.id }}"
-                {% if widget in selected_widgets %} checked {% endif %}>
-            {{ widget.title }} - {{ widget.description }}
-        </label><br>
-    {% endfor %}
-    <button type="submit">Update Dashboard</button>
-</form>
+    <!-- Dashboard CSS-->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 
-<div class="dashboard-widgets">
-    {% for widget in selected_widgets %}
-        <div class="widget">
-            <h3>{{ widget.title }}</h3>
-            <p>{{ widget.description }}</p>
-            <!-- Here, you can add logic to display actual metrics for each widget -->
+    <link rel="shortcut icon" href="{% static 'images/Hicon.png' %}" type="image/x-icon">
+</head>
+<body>
+    <div class="grid-container">        
+        {% if messages %}
+        <div id="flash-messages" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="max-width: 400px;">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-</div>
-{% endblock %}
+        {% endif %}
+
+        <!-- Header Bar -->
+        <header class="header">
+            <div class="menu-icon" onclick="openSidebar()">
+                <span class="material-icons-outlined">menu</span>
+            </div>
+            <div class="header-left">
+                <span class="material-icons-outlined">search</span>
+                <input type="text" class="search-bar" placeholder="Search...">
+            </div>
+            <div class="header-right">
+                <span class="material-icons-outlined" onclick="openNotifications()">notifications</span>
+                <span class="material-icons-outlined" onclick="openMessages()">email</span>
+                <span class="material-icons-outlined" onclick="openAccount()">account_circle</span>
+            </div>
+        </header>
+        <!-- End Header Bar -->
+
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-title">
+                <div class="sidebar-brand">
+                    <span class="material-icons-outlined">local_hospital</span> Health Data Analytics
+                </div>
+                <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+            </div>
+            <ul class="sidebarlist">
+                <li class="sidebar-list-item active">
+                    <a href="{% url 'users:dashboard' %}" class="sidebar-link">
+                        <span class="material-icons-outlined">dashboard</span> Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'patients:register_patient' %}" class="sidebar-link">
+                        <span class="material-icons-outlined">people</span> Register Patient
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'patients:patient_list' %}" class="sidebar-link">
+                        <span class="material-icons-outlined">people</span> Patient Data
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="#" class="sidebar-link">
+                        <span class="material-icons-outlined">assessment</span> Reports
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="#" class="sidebar-link">
+                        <span class="material-icons-outlined">analytics</span> Analytics
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="#" class="sidebar-link">
+                        <span class="material-icons-outlined">settings</span> Settings
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'users:logout' %}" class="sidebar-link">
+                        <span class="material-icons-outlined">logout</span> Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        <!-- End Side Bar -->
+
+        <!-- Main Content -->
+        <main class="main-container">
+            <div class="main-title">
+                <h2>Dashboard</h2>
+            </div>
+
+            <div class="main-cards">
+                <div class="card">
+                    <div class="cards-inner">
+                        <h3>Total Patients</h3>
+                        <span class="material-icons-outlined">people</span>
+                        <h2>1,200</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="cards-inner">
+                        <h3>Active Cases</h3>
+                        <span class="material-icons-outlined">medical_services</span>
+                        <h2>300</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="cards-inner">
+                        <h3>Discharged Patients</h3>
+                        <span class="material-icons-outlined">check_circle</span>
+                        <h2>900</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="cards-inner">
+                        <h3>Emergency Cases</h3>
+                        <span class="material-icons-outlined">warning</span>
+                        <h2>50</h2>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        <!-- Main End -->
+    </div>
+
+    <!-- Apex Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@4.0.0/dist/apexcharts.min.js" integrity="sha256-lxq7SgtEqX+EEzp8D7xQpwOf4WzSQRNQELUpuXT3F/Q=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    <script>
+        // Sidebar Toggle
+        var sidebarOpen = false; // Flag to track sidebar state
+        var sidebar = document.getElementById("sidebar"); // Get the sidebar element
+
+        function openSidebar() {
+            console.log("Sidebar open function called"); // Debugging line
+            sidebar.classList.toggle("sidebar-responsive"); // Toggle class to show/hide sidebar
+            sidebarOpen = !sidebarOpen; // Update the flag based on the new state
+        }
+
+        function closeSidebar() {
+            console.log("Sidebar close function called"); // Debugging line
+            if (sidebarOpen) { // Check if sidebar is open
+                sidebar.classList.remove("sidebar-responsive"); // Remove class to hide sidebar
+                sidebarOpen = false; // Update the flag
+            }
+        }
+        // Optional: Click outside sidebar to close it (if desired)
+        document.addEventListener("click", function(event) {
+            if (sidebarOpen && !sidebar.contains(event.target) && !document.querySelector('.menu-icon').contains(event.target)) {
+                closeSidebar(); // Close sidebar if clicked outside
+            }
+        });
+    </script>
+</body>
+</html>

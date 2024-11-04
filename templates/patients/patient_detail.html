@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ patient.name }}'s Details</h2>
+    <p><strong>Age:</strong> {{ patient.age }}</p>
+    <p><strong>Gender:</strong> {{ patient.get_gender_display }}</p>
+    <p><strong>Address:</strong> {{ patient.address }}</p>
+    <p><strong>Phone:</strong> {{ patient.phone_number }}</p>
+    <p><strong>Email:</strong> {{ patient.email }}</p>
+
+    <h3 class="mt-4">Blood Pressure Measurements</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Systolic</th>
+                <th>Diastolic</th>
+                <th>Heart Rate</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for measurement in measurements %}
+            <tr>
+                <td>{{ measurement.recorded_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ measurement.systolic }}</td>
+                <td>{{ measurement.diastolic }}</td>
+                <td>{{ measurement.heart_rate }}</td>
+                <td>{{ measurement.notes }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No measurements recorded yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3 class="mt-4">Add New Blood Pressure Measurement</h3>
+    <form method="POST" action="{% url 'add_bp_measurement' patient.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Add Measurement</button>
+    </form>
+
+    <!-- Chart for Blood Pressure Trends -->
+    <h3 class="mt-5">Blood Pressure Trends</h3>
+    <canvas id="bpChart" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('bpChart').getContext('2d');
+const bpChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [{% for measurement in measurements %}'{{ measurement.recorded_at|date:"Y-m-d" }}',{% endfor %}],
+        datasets: [
+            {
+                label: 'Systolic',
+                data: [{% for measurement in measurements %}{{ measurement.systolic }},{% endfor %}],
+                borderColor: 'rgb(255, 99, 132)',
+                fill: false,
+                tension: 0.1
+            },
+            {
+                label: 'Diastolic',
+                data: [{% for measurement in measurements %}{{ measurement.diastolic }},{% endfor %}],
+                borderColor: 'rgb(54, 162, 235)',
+                fill: false,
+                tension: 0.1
+            }
+        ]
+    },
+    options: {
+        scales: {
+            x: { title: { display: true, text: 'Date' } },
+            y: { title: { display: true, text: 'Blood Pressure (mmHg)' } }
+        }
+    }
+});
+</script>
+{% endblock %}

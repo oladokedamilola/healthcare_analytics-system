@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #MY APPS
     'analytics',
     'users',
+    'patient_records',
     
 ]
 

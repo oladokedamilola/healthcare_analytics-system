@@ -1,0 +1,25 @@
+
+.navbar {
+    background-color: var(--primary-color);
+}
+
+.navbar-brand {
+    color: var(--text-color);
+    transition: color 0.3s ease; /* Smooth transition for hover */
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff; /* Bright text color for the links */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover and scaling */
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--accent-color); /* Keep the hover color as is */
+    transform: scale(1.1); /* Scale effect on hover */
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif; /* Use Roboto for headings */
+    color: var(--secondary-color);
+}
